@@ -9,6 +9,10 @@ Source:         %{url}/archive/v%{version}/compas-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python3-devel
+
+# Test dependencies:
+BuildRequires: python3dist(pytest)
+
 Suggests: python3-compas+extras
 
 %global _description %{expand:
