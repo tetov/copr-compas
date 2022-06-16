@@ -60,7 +60,7 @@ Summary:        %{summary}
 
 %check
 # fix rpc tests
-sed -e "s#python='python'#python='%{python3}'#" tests/compas/rpc/test_rpc.py
+sed -i -e "s#python='python'#python='%{python3}'#" tests/compas/rpc/test_rpc.py
 
 # test_compas_api_stubs requires sphinx-autogen and not relevant to the package
 %pytest tests -k "not test_compas_api_stubs"
