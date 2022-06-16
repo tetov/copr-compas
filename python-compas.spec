@@ -1,11 +1,15 @@
-Name:           python-compas
+%global pypi_name compas
+%global proj_name compas
+%global pkg_names %{proj_name} compas_blender compas_ghpython compas_plotters compas_rhino
+
+Name:           python-%{pypi_name}
 Version:        1.15.1
 Release:        1%{?dist}
 Summary:        The COMPAS framework
 
 License:        MIT
-URL:            https://github.com/compas-dev/compas
-Source:         %{url}/archive/v%{version}/compas-%{version}.tar.gz
+URL:            https://github.com/compas-dev/%{proj_name}
+Source:         %{url}/archive/v%{version}/%{proj_name}-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  python3-devel
@@ -13,7 +17,7 @@ BuildRequires:  python3-devel
 # Test dependencies:
 BuildRequires: python3dist(pytest)
 
-Suggests: python3-compas+extras
+Suggests: python3-%{pypi_name}+extras
 
 %global _description %{expand:
 The COMPAS framework is an open-source, Python-based framework for computational
@@ -33,15 +37,15 @@ package managers on multiple platforms.}
 
 %description %_description
 
-%package -n python3-compas
+%package -n python3-%{pypi_name}
 Summary:        %{summary}
 
-%description -n python3-compas %_description
+%description -n python3-%{pypi_name} %_description
 
-%pyproject_extras_subpkg -n python3-compas extras
+%pyproject_extras_subpkg -n python3-%{pypi_name} extras
 
 %prep
-%autosetup -p1 -n compas-%{version}
+%autosetup -p1 -n %{pypi_name}-%{version}
 
 %generate_buildrequires
 %pyproject_buildrequires
@@ -52,13 +56,16 @@ Summary:        %{summary}
 %install
 %pyproject_install
 
-%pyproject_save_files compas compas_blender compas_ghpython compas_plotters compas_rhino
+%pyproject_save_files %{pkg_names}
 
 %check
+# fix rpc tests
+sed -e "s#python='python'#python='%{python3}'#" tests/compas/rpc/test_rpc.py
 
-%pytest tests
+# test_compas_api_stubs requires sphinx-autogen and not relevant to the package
+%pytest tests -k "not test_compas_api_stubs"
 
-%files -n python3-compas -f %{pyproject_files}
+%files -n python3-%{pypi_name} -f %{pyproject_files}
 %doc README.md
 %{_bindir}/compas_rpc
 
