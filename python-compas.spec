@@ -42,7 +42,8 @@ Summary:        %{summary}
 
 %description -n python3-%{pypi_name} %_description
 
-%pyproject_extras_subpkg -n python3-%{pypi_name} extras
+%pyproject_extras_subpkg -n python3-%{pypi_name} numba
+%pyproject_extras_subpkg -n python3-%{pypi_name} planarity
 
 %prep
 %autosetup -p1 -n %{pypi_name}-%{version}
